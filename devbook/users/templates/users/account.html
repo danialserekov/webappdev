@@ -1,0 +1,110 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" class="rounded-circle img-fluid" style="width: 200px; height: 200px; object-fit: cover;">
+            <h2 class="my-3">{{ profile.name }}</h2>
+            
+            <a href="{% url 'edit-account' %}" class="btn btn-outline-dark btn-sm mb-3 w-50">Edit Profile</a>
+            <p><strong>Username:</strong> {{ profile.username }}</p>
+            <p><strong>Location:</strong> {{ profile.location }}</p>
+            <p><strong>Email:</strong> {{ profile.email }}</p>
+        </div>
+
+        <div class="col-md-8">
+            <h3>About Me</h3>
+            <p>{{ profile.bio }}</p>
+
+
+            <div class="mb-4">
+                <h3 class="mt-4">Interests</h3>
+                <a href="{% url 'add-interest' %}" class="btn btn-outline-dark mb-3">
+                    <i class="fas fa-plus"></i> Add New Interest
+                </a>
+                {% if profile.interests_set.all %}
+                    <div class="list-group">
+                        {% for interest in profile.interests_set.all %}
+                            <div class="list-group-item d-flex  align-items-start">
+                                <div class="row">
+                                <div class="col-md-10">
+                                    <h5>{{ interest.name }}</h5>
+                                    <p>{{ interest.description }}</p>
+                                </div>
+                                <div class="col-md-2 mt-2">
+                                    <a href="{% url 'update-interest' interest.id %}" class="btn btn-outline-dark btn-sm mb-2 w-100">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <br>
+                                    <a href="{% url 'delete-interest' interest.id %}" class="btn btn-outline-danger btn-sm w-100">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        No interests added yet. Click the button above to add your first interest!
+                    </div>
+                {% endif %}
+            </div>
+            
+            
+
+            
+            <div class="mt-4">
+                <h5>Connect with me:</h5>
+                <div>
+                    {% if profile.social_inst %}
+                        <a href="https://instagram.com/{{ profile.social_inst }}" target="_blank" class="btn btn-outline-dark btn-sm mx-1">Instagram</a>
+                    {% endif %}
+                    {% if profile.social_twitter %}
+                        <a href="https://twitter.com/{{ profile.social_twitter }}" target="_blank" class="btn btn-outline-dark btn-sm mx-1">Twitter</a>
+                    {% endif %}
+                    {% if profile.social_linkedin %}
+                        <a href="https://linkedin.com/in/{{ profile.social_linkedin }}" target="_blank" class="btn btn-outline-dark btn-sm mx-1">LinkedIn</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <h3 class="text-center mb-4">Posted News</h3>
+        
+        <!-- Create Post Button -->
+        <div class="text-center mb-4">
+            <a href="{% url 'create-post' %}" class="btn btn-outline-dark">
+                <i class="fas fa-plus"></i> Create New Post
+            </a>
+        </div>
+    
+        {% for post in news %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <a href="{% url 'post-page' post.id %}">
+                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content|slice:":50" }}...</p>
+                    <div class="d-flex">
+                        <a href="{% url 'update-post' post.id %}" class="btn btn-outline-warning btn-sm me-2">Edit</a>
+                        <a href="{% url 'post-page' post.id %}" class="btn btn-outline-primary btn-sm me-2">View</a>
+                        <a href="{% url 'delete-post' post.id %}" class="btn btn-outline-danger btn-sm me-2">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">No news posted yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}

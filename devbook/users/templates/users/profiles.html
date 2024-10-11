@@ -1,0 +1,79 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <hr>
+
+    <h1 class="mb-4 text-center">DevBook Users</h1>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 mb-4">
+                <form class="d-flex" action="{% url 'profiles' %}" method="GET">
+                    <div class="form__field flex-grow-1 me-2">
+                        <input class="form-control" id="formInput#search" type="text" name="search_query"
+                        value="{{ search_query }}" placeholder="Search by username" />
+                    </div>
+                    <button type="submit" class="btn btn-dark mt-1" style="border-radius: 10%;">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="row">
+        {% for profile in page_obj %}
+        <div class="col-md-4 mb-4">
+            <div class="card text-center shadow-sm border-1">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <img src="{{ profile.profile_image.url }}" class="rounded-circle shadow" alt="{{ profile.name|default:'empty' }}" style="height: 150px; width: 150px; object-fit: cover;">
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ profile.name|default:'empty' }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@{{ profile.user.username|default:'empty' }}</h6>
+                    <p class="card-text">{{ profile.short_intro|default:'empty' }}</p>
+                    <a href="{% url 'profile-page' profile.id %}" class="btn btn-dark w-100">View Full Profile</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No users available.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

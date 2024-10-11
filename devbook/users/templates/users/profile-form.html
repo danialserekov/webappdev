@@ -1,0 +1,65 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center display-4 fw-bold">Edit Account</h1>
+
+    <form action="{% url 'edit-account' %}" method="POST" enctype="multipart/form-data" class="bg-light p-4 rounded shadow-sm">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" name="username" value="{{ form.username.value }}" class="form-control" id="username" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" value="{{ form.name.value }}" class="form-control" id="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" value="{{ form.email.value }}" class="form-control" id="email" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" name="location" value="{{ form.location.value }}" class="form-control" id="location" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="short_intro" class="form-label">Short Intro</label>
+            <input type="text" name="short_intro" value="{{ form.short_intro.value }}" class="form-control" id="short_intro">
+        </div>
+
+        <div class="mb-3">
+            <label for="bio" class="form-label">Bio</label>
+            <textarea name="bio" class="form-control" id="bio" rows="3">{{ form.bio.value }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="profile_image" class="form-label">Profile Image</label>
+            <input type="file" name="profile_image" class="form-control" id="profile_image">
+        </div>
+
+        <div class="mb-3">
+            <label for="social_inst" class="form-label">Instagram</label>
+            <input type="text" name="social_inst" value="{{ form.social_inst.value }}" class="form-control" id="social_inst">
+        </div>
+
+        <div class="mb-3">
+            <label for="social_twitter" class="form-label">Twitter</label>
+            <input type="text" name="social_twitter" value="{{ form.social_twitter.value }}" class="form-control" id="social_twitter">
+        </div>
+
+        <div class="mb-3">
+            <label for="social_linkedin" class="form-label">LinkedIn</label>
+            <input type="text" name="social_linkedin" value="{{ form.social_linkedin.value }}" class="form-control" id="social_linkedin">
+        </div>
+
+        <div class="text-center">
+            <input type="submit" value="Submit" class="btn btn-primary btn-lg">
+        </div>
+    </form>
+</div>
+{% endblock content %}

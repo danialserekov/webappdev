@@ -1,0 +1,28 @@
+<div class="content">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" style="font-size:x-large;" href="{% url 'blog-list' %}">DevBook</a>
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item me-5">
+                    <a class="nav-link d-flex align-items-center" href="{% url 'profiles' %}">Users</a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item me-5">
+                    <a class="nav-link d-flex align-items-center" href="{% url 'account' %}">Account</a>
+                </li>
+                <li class="nav-item me-5">
+                    <a class="nav-link d-flex align-items-center" href="{% url 'inbox' %}">Message</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href="{% url 'logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href="{% url 'login' %}">Login/Sign up</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>

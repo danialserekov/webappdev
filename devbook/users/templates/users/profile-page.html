@@ -1,0 +1,74 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" class="rounded-circle img-fluid" style="width: 200px; height: 200px; object-fit: cover;">
+            <h2 class="my-3">{{ profile.name }}</h2>
+            
+            <a href="" class="btn btn-dark mb-3 w-50">Send Message</a>
+            <p><strong>Username:</strong> {{ profile.username }}</p>
+            <p><strong>Location:</strong> {{ profile.location }}</p>
+            <p><strong>Email:</strong> {{ profile.email }}</p>
+        </div>
+
+        <div class="col-md-8">
+            <h3>About Me</h3>
+            <p>{{ profile.bio }}</p>
+
+            <h3 class="mt-4">Interests</h3>
+            {% if profile.interests_set.all %}
+                <ul class="list-group">
+                    {% for interest in profile.interests_set.all %}
+                    <li class="list-group-item">
+                        <h5>{{ interest.name }}</h5>
+                        <p>{{ interest.description }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No interests added yet.</p>
+            {% endif %}
+            
+            <div class="mt-4">
+                <h5>Connect with me:</h5>
+                <div>
+                    {% if profile.social_inst %}
+                        <a href="https://instagram.com/{{ profile.social_inst }}" target="_blank" class="btn btn-outline-dark btn-sm mx-1">Instagram</a>
+                    {% endif %}
+                    {% if profile.social_twitter %}
+                        <a href="https://twitter.com/{{ profile.social_twitter }}" target="_blank" class="btn btn-outline-dark btn-sm mx-1">Twitter</a>
+                    {% endif %}
+                    {% if profile.social_linkedin %}
+                        <a href="https://linkedin.com/in/{{ profile.social_linkedin }}" target="_blank" class="btn btn-outline-dark btn-sm mx-1">LinkedIn</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <h3 class="text-center mb-4">Posted News</h3>
+        {% for post in profile.post_set.all %}
+        <div class="col-md-4 mb-4">
+            
+            <div class="card shadow-sm">
+                <a href="{% url 'post-page' post.id %}">
+                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content|slice:":50" }}...</p>
+                    <a href="{% url 'update-post' post.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'post-page' post.id %}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{% url 'delete-post' post.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No news posted yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

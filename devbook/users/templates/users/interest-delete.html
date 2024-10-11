@@ -1,0 +1,20 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card">
+        <div class="card-body text-center">
+            <h5 class="card-title">Delete Interest Confirmation</h5>
+            <p class="card-text">Are you sure you want to delete the interest "{{ interest }}"?</p>
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="d-flex justify-content-center mb-3">
+                    <a href="{% url 'account' %}" class="btn btn-secondary me-2">Go Back</a>
+                    <input type="submit" class="btn btn-danger" value="Confirm">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

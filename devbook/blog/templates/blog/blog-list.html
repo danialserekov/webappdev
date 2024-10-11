@@ -1,0 +1,91 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container my-5">
+    <hr>
+    <h1 class="mb-4 text-center">Recent Posts</h1>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 mb-4">
+                <form class="d-flex" action="{% url 'blog-list' %}" method="GET">
+                    <div class="form__field flex-grow-1 me-2">
+                        <input class="form-control" id="formInput#search" type="text" name="search_query"
+                        value="{{ search_query }}" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-dark mt-1" style="border-radius: 10%;">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+    {% for post in page_obj %}
+    <div class="card mb-4">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <div class="post-image-wrapper">
+                    <img src="{{ post.featured_image.url }}" class="img-fluid rounded-start post-image" alt="{{ post.title }}">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h4 class="card-title">{{ post.title }}</h4>
+                    <p class="card-text">{{ post.content|slice:":150" }}...</p>
+                    <p class="text-muted mb-1">Author: {{ post.owner }}</p>
+                    <p class="text-muted">Published on: {{ post.published_date }}</p>
+    
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <span class="badge bg-success">Positive Votes: {{ post.vote_ratio }}%</span>
+                            <span class="badge bg-primary">Total Votes: {{ post.vote_total }}</span>
+                        </div>
+                        <div>
+                            {% if request.user.is_authenticated and request.user.profile.id == post.owner.id %}
+                                <a href="{% url 'update-post' post.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'delete-post' post.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
+                            <a href="{% url 'post-page' post.id %}" class="btn btn-primary btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% endfor %}
+
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

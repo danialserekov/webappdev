@@ -1,0 +1,58 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<!-- Main Section -->
+<main class="messagePage my-5">
+  <div class="container" style="max-width: 700px; margin: 0 auto;">
+    <div class="content-box">
+      <div class="message">
+        <a class="backButton btn btn-outline-secondary mb-3" href="{% url 'inbox' %}">
+          <i class="im im-angle-left"></i> Back to Inbox
+        </a>
+        <h2 class="message__subject text-center">{{ message.subject }}</h2>
+
+        <!-- Message Header -->
+        <div class="message__header mb-3">
+          {% if message.sender %}
+            <a href="{% url 'profile-page' message.sender.id %}" class="message__author">{{ message.name }}</a>
+          {% else %}
+            <p class="message__author">{{ message.name }}</p>
+          {% endif %}
+          <p class="message__date text-muted">{{ message.created }}</p>
+        </div>
+
+        <!-- Message Body -->
+        <div class="message__body mb-4">{{ message.body|linebreaksbr }}</div>
+
+        <!-- Conversation Messages -->
+        <div class="message__history text-center">
+          {% for msg in messages %}
+            <div class="message__item {% if msg.sender == request.user.profile %}sent{% else %}received{% endif %}">
+              <div class="d-flex justify-content-center">
+                <div>
+                  <strong class="{% if msg.sender == request.user.profile %}text-primary{% else %}text-success{% endif %}">
+                    {{ msg.sender.username }}
+                  </strong>
+                  <p class="mb-1 {% if not msg.is_read %}font-weight-bold{% endif %}">{{ msg.body }}</p>
+                  <small class="text-muted">{{ msg.published_date|date:"F j, Y, g:i a" }}</small>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+          <div class="text-center">No messages yet.</div>
+          {% endfor %}
+        </div>
+
+        <!-- Message Input Form -->
+        <form action="" method="POST" class="text-center mt-4">
+          {% csrf_token %}
+          <div class="mb-3" style="max-width: 700px; margin: 0 auto;">
+            <textarea name="message_content" class="form-control" rows="3" placeholder="Type your message..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %}
